@@ -1,0 +1,72 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Test initial directory contents
+      run: |
+        pwd
+        ls -Rl
+    - name: Build the Docker image
+      run: docker build --tag ubuntu22.04-pandoc --file dockerfile .
+    - name: Build the Docker container
+      run: docker compose --file compose.yml up --detach
+    - name: Run the actual command
+      run: docker exec -t pandoc-resume-generator make
+    - name: Show me what happened
+      run: |
+        pwd
+        ls -al output
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: Completed Resumes
+        path: output/
+
+    - name: Clear README with intro text
+      run: |
+        cat README.md
+        echo "# What is Today's Date?" > README.md
+        echo "This repository keeps track of today's date." >> README.md
+        echo "* * *" >> README.md
+        echo " " >> README.md
+        echo "## The current date:  " >> README.md
+    - name: Modify date and time
+        # NOTE: UTC is adjusted to local MNT time. Please correct based on local standards. 
+      run: |
+        cat README.md
+        echo " $(date -d '-6 hour' +"%m/%d/%Y") " >> README.md
+        echo "  " >> README.md
+        echo "  " >> README.md
+        echo " TIME IS ALSO THIS: " >> README.md
+        echo "  " >> README.md
+        echo " $(date -d '-6 hour' +"%I:%M.%S") " >> README.md
+        echo "  " >> README.md
+        echo "  " >> README.md
+        cat README.md
+    - name: Push to repository
+      run: |
+        git config --global user.name "ToddServo"
+        git config --global user.email "16764933+ToddServo@users.noreply.github.com"
+        now=$(date)
+        git add -A
+        git commit -m "Auto Push on $now"
+        git push
+    
+    - name: Show me contents before quit
+      run: |
+        pwd
+        ls -Rl
+
+
