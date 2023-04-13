@@ -55,7 +55,7 @@ RUN chmod +x /home/app/entrypoint.sh
 # By default, the root user is run in a Docker container. To avoid this you must create a new user account, **__only after all configuration files have been edited and packages have been installed__**.
 # The `useradd` command provides a non-interactive way to create new users.
 # This isn't to be confused with the `adduser` command, which is a higher level wrapper over useradd.
- RUN useradd --user-group --create-home --shell /bin/false app
+# RUN useradd --user-group --create-home --shell /bin/false app
 
 # This user is then set as the default user for any further operations:
- USER app
+# USER app
