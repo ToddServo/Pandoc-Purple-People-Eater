@@ -47,7 +47,7 @@ jobs:
       run: |
         cat README.md
         echo " $(date -d '-6 hour' +"%m/%d/%Y") " >> README.md
-        echo "  " >> README.md
+        echo "   " >> README.md
         echo "  " >> README.md
         echo " TIME IS ALSO THIS: " >> README.md
         echo "  " >> README.md
